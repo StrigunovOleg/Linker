@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Linker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        .input-group-text {
+            width: 200px;
+        }
+
+        .form-control:focus {
+            border-color: #FF0000;
+            /* box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6); */
+            box-shadow: none;
+            }
+
+        input::placeholder {
+            color: #E5E5E5;
+        }
+
+        input:focus {
+            outline: none !important;
+        }
+
+        input:active {
+            outline: none !important;
+        }
+
+        .wrapper {
+            margin: 40px auto;
+            width: 80%;
+        }
+
+        .regular_size {
+            max-width: 340px;
+        }
+
+        .big_size {
+            max-width: 640px;
+        }
+
+        .dropdown-item:hover {
+            cursor: pointer;
+        }
+
+        .link-decor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.5s ease-in-out;
+        }
+
+        .link-decor:hover {
+            cursor: pointer;
+        }
+
+
+
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- toggle system -->
+        <div style="margin-bottom: 40px;">
+            <input id="bloomreachSystem" type="radio" class="btn-check" name="options" id="bloomreachSystem" autocomplete="off">
+            <label class="btn btn-outline-primary" for="bloomreachSystem">Bloomreach</label>
+
+            <input id="emarsysStstem" type="radio" class="btn-check" name="options" id="emarsysStstem" autocomplete="off">
+            <label class="btn btn-outline-primary" for="emarsysStstem">Emarsys</label>
+
+            <a  class="btn btn-secondary" href="web.html">WEB BUILDER</a>
+        </div>
+        <!-- select app -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Приложение</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="addValue('domen', esp.fbspa)">ПА</a></li>
+                <li><a class="dropdown-item" onclick="addValue('domen', esp.fbspa_id)">ПА id</a></li>
+                <li><a class="dropdown-item" onclick="addValue('domen', esp.fbstrade)">ТП</a></li>
+                <li><a class="dropdown-item" onclick="addValue('domen', esp.fbstrade_id)">ТП id</a></li>
+            </ul>
+            <input id="inpDomen" oninput="addValue('domen', this.value)" type="text" class="form-control" placeholder="app" aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- ?utm_source=$ESP$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Источник</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="addValue('utm_source', bloomreachData.utm_source)">bloomreach</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_source', emarsysData.utm_source)">Emarsys</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_source', pushWooshData.utm_source)">PushWoosh</a></li>
+            </ul>
+            <input id="inpUtmSource" oninput="addValue('utm_source', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_medium=$типа трафика$ --> 
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Канал</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" id="mediumLists"></ul>
+            <input id="inpUtmMedium" oninput="addValue('utm_medium', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_content=$язык$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Язык</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="addValue('utm_content', bloomreachData.utm_content)">Bloomreach</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_content', emarsysData.utm_content)">Emarsys</a></li>
+            </ul>
+            <input id="inpUtmContent" oninput="addValue('utm_content', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_campaign=$кампания$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Кампания</span>
+            <input oninput="addValue('utm_campaign', this.value)" id="inpUtmCampaing" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div>
+         <!-- af_click_lookback=3d -->
+         <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Окно атрибуции</span>
+            <input oninput="addValue('af_click_lookback', this.value)" id="inpAfClickLookback" value="" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_term=$часть письма$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Часть письма</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" id="termLists">
+            </ul>
+            <input id="inpUtmTerm" oninput="addValue('utm_term', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- deep -->
+        <!-- &deep_link_value= -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">
+                <span>  
+                     Диплинк (есть прила)<br />
+                    <a href="https://confluence.ddl.com/pages/releaseview.action?pageId=13805403" target="_blank">PA</a>
+                    <a href="https://confluence.ddl.com/pages/viewpage.action?pageId=39879183" target="_blank">TP</a>
+                </span>
+            </span>
+            <input oninput="addValue('deep_link_value', this.value)" id="inpDeepLinkValue" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div>
+        <!-- &af_dp= -->
+        <!-- <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">af_dp</span>
+            <input oninput="addValue('af_dp', this.value)" id="inpAfDp" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div>    -->
+        <!-- &af_ios_url= -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">iOS (нет прилы)</span>
+            <input oninput="addValue('af_ios_url', this.value)" id="inpAfIosUrl" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div> 
+        <!-- &af_android_url= -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Android (нет прилы)</span>
+            <input oninput="addValue('af_android_url', this.value)" id="inpAfAndroidUrl" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div> 
+        <!-- &af_web_dp= -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">Веб Desktop</span>
+            <input oninput="addValue('af_web_dp', this.value)" id="inpAfWebDp" type="text" class="form-control" placeholder="добавить..." aria-label="value" aria-describedby="basic-addon1">
+        </div> 
+
+        <!-- result -->
+        <div class="input-group">
+            <span id="linkCopy" class="link-decor input-group-text" onclick="copyLink()">Линк:</span>
+            <textarea style="height: 300px;" id="inpResult" placeholder="https://$домен$/" class="form-control" aria-label="https://$домен$/"></textarea>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+    </script>
+
+    <script>
+        const esp = {
+            fbspa: "https://fbspa.onelink.me/00Zt/?",
+            fbspa_id: "https://fbspa-id.onelink.me/FOrK/?",
+            fbstrade: "https://fbstrade.onelink.me/c2dL/?",
+            fbstrade_id: "https://fbstrade-id.onelink.me/Zff0/?",
+            utm_source: "af_channel=",
+            utm_content: "&af_adset=",
+            utm_medium: "&pid=",
+            utm_campaign: "&c=",
+            utm_campaign: "&XXXXX=",
+            utm_term: "&af_ad=",
+
+            deep_link_value: "&deep_link_value=",
+            af_dp: "&af_dp=",
+            af_ios_url: "&af_ios_url=",
+            af_android_url: "&af_android_url=",
+            af_web_dp: "&af_web_dp="
+        }
+
+        const basicData = {
+            utm_medium: ['Email','Push','Sms'],
+            utm_term: ['Header','Body','Footer']
+        }
+
+        const bloomreachData = {
+            domen: "https://fbspa.onelink.me/00Zt/",
+            utm_source: "bloomreach",
+            utm_content: "{{ customer.language }}",
+            uderdomen: "{{ customer.domain_cabinet }}"
+        }
+
+        const emarsysData = {
+            domen: "https://fbspa.onelink.me/00Zt/",
+            utm_source: "fbs-eMS",
+            utm_content: "$Lang -- Cabinet id$",
+            uderdomen: "$domain_cabinet$"
+        }
+
+        const pushWooshData = {
+            utm_source: "PushWoosh",
+        }
+
+        const utmUnderlink = {
+            source: "?utm_source=",
+            content: "&utm_content=",
+            medium: "&utm_medium=",
+            campaign: "&utm_campaign=",
+            campaign: "&utm_campaign=",
+            af_click_lookback: "&af_click_lookback=",
+            term: "&utm_term=",
+
+            utm_source: "",
+            utm_content: "",
+            utm_medium: "",
+            utm_campaign: "",
+            utm_term: "",
+        }
+
+        let underDomen = emarsysData.uderdomen
+        let domen = esp.fbspa
+        let utm_source = ""
+        let utm_medium = ""
+        let utm_content = ""
+        let utm_campaign = ""
+        let af_click_lookback = ""
+        let utm_term = ""
+        // for deep var
+        let uderlink = ""
+        let deep_link_value = ""
+        let af_dp = ""
+        let af_ios_url = ""
+        let af_android_url = ""
+        let af_web_dp = ""
+
+
+        bloomreachSystem.addEventListener('click', (e)=> {selectSystem(e.target)})
+        emarsysStstem.addEventListener('click', (e)=> {selectSystem(e.target)})
+
+        function addValue(type, value) {
+            switch(type) {
+                case 'domen': 
+                    domen = value.length == 0 ? "" : value
+                    inpDomen.value = value
+                    break;
+                case 'utm_source':
+                    utm_source = value.length == 0 ? "" : esp.utm_source+value
+                    utmUnderlink.utm_source = value.length == 0 ? "" : utmUnderlink.source+value
+                    inpUtmSource.value = value
+                    updateUnderLink()
+                    break;
+                case 'utm_medium':
+                    utm_medium = value.length == 0 ? "" : esp.utm_medium+value
+                    utmUnderlink.utm_medium = value.length == 0 ? "" : utmUnderlink.medium+value
+                    inpUtmMedium.value = value
+                    updateUnderLink()
+                    break;   
+                case 'utm_content':
+                    utm_content = value.length == 0 ? "" : esp.utm_content+value
+                    utmUnderlink.utm_content = value.length == 0 ? "" : utmUnderlink.content+value
+                    inpUtmContent.value = value
+                    updateUnderLink()
+                    break;  
+                case 'utm_campaign':
+                    utm_campaign = value.length == 0 ? "" : esp.utm_campaign+value
+                    utmUnderlink.utm_campaign = value.length == 0 ? "" : utmUnderlink.campaign+value
+                    updateUnderLink()
+                    break;   
+                case 'af_click_lookback':
+                    af_click_lookback = value.length == 0 ? "" : utmUnderlink.af_click_lookback+value
+                    inpAfClickLookback.value = value
+                    updateUnderLink()
+                    break; 
+                case 'utm_term':
+                    utm_term = value.length == 0 ? "" : esp.utm_term+value
+                    utmUnderlink.utm_term = value.length == 0 ? "" : utmUnderlink.term+value
+                    inpUtmTerm.value = value
+                    updateUnderLink()
+                    break;  
+
+                case 'deep_link_value':
+                    deep_link_value = value.length == 0 ? "" : esp.deep_link_value+value+underlink
+                    inpDeepLinkValue.value = value
+                    // af_dp
+                    af_dp = value.length == 0 ? "" : esp.af_dp+value+underlink
+                    break;  
+                case 'af_dp':
+                    af_dp = value.length == 0 ? "" : esp.af_dp+value+underlink
+                    //inpAfDp.value = value
+                    break;  
+                case 'af_ios_url':
+                    af_ios_url = value.length == 0 ? "" : esp.af_ios_url+value+underlink
+                    inpAfIosUrl.value = value
+                    break;  
+                case 'af_android_url':
+                    af_android_url = value.length == 0 ? "" : esp.af_android_url+value+underlink
+                    inpAfAndroidUrl.value = value
+                    break;  
+                case 'af_web_dp':
+                    af_web_dp = value.length == 0 ? "" : esp.af_web_dp+value+underlink
+                    inpAfWebDp.value = value
+                    break;   
+                default:
+                    // code block
+                }
+            
+            renderUnderLink()
+            renderLink()
+        }
+
+        function selectSystem(target) {
+            switch(target.id) {
+                case 'bloomreachSystem':
+                    // utm_source
+                    inpUtmSource.value = bloomreachData.utm_source
+                    utm_source = esp.utm_source+inpUtmSource.value
+                    // utm_content
+                    inpUtmContent.value = bloomreachData.utm_content
+                    utm_content = esp.utm_content+inpUtmContent.value
+                    // uderlinkDomen
+                    underDomen = bloomreachData.uderdomen
+                    break;
+                case 'emarsysStstem':
+                    // utm_source
+                    inpUtmSource.value = emarsysData.utm_source
+                    utm_source = esp.utm_source+inpUtmSource.value
+                    // utm_content
+                    inpUtmContent.value = emarsysData.utm_content
+                    utm_content = esp.utm_content+inpUtmContent.value
+                    // uderlinkDomen
+                    underDomen = emarsysData.uderdomen
+                    break;
+                default:
+                    // code block
+            }
+
+            // domen
+            domen = esp.fbspa
+            inpDomen.value = domen
+            // utm_medium
+            inpUtmMedium.value = basicData.utm_medium[0]
+            utm_medium = esp.utm_medium+inpUtmMedium.value
+            // utm_term
+            inpUtmTerm.value = basicData.utm_term[0]
+            utm_term = esp.utm_term+inpUtmTerm.value
+
+            // uderLink
+            utmUnderlink.utm_source = utmUnderlink.source+inpUtmSource.value
+            utmUnderlink.utm_content = utmUnderlink.content+inpUtmContent.value
+            utmUnderlink.utm_medium = utmUnderlink.medium+inpUtmMedium.value
+            utmUnderlink.utm_term = utmUnderlink.term+inpUtmTerm.value
+
+            renderUnderLink()
+            renderLink()
+        }
+
+        function renderLink() {
+            inpResult.value = `${domen}${utm_source}${utm_medium}${utm_content}${utm_campaign}${af_click_lookback}${utm_term}&is_retargeting=true${percentEncode(deep_link_value)}${percentEncode(af_dp)}${percentEncode(af_ios_url)}${percentEncode(af_android_url)}${percentEncode(af_web_dp)}%26no_eu_overlay%3D1`
+        }
+
+        function renderUnderLink() {
+            underlink = `${utmUnderlink.utm_source}${utmUnderlink.utm_medium}${utmUnderlink.utm_content}${utmUnderlink.utm_campaign}${utmUnderlink.utm_term}`
+        }
+
+        function updateUnderLink() {
+            renderUnderLink()
+            addValue('deep_link_value', inpDeepLinkValue.value)
+            addValue('af_dp', inpDeepLinkValue.value)
+            addValue('af_ios_url', inpAfIosUrl.value)
+            addValue('af_android_url', inpAfAndroidUrl.value)
+            addValue('af_web_dp', inpAfWebDp.value)
+        }
+
+        function initOptions() {
+            basicData.utm_medium.forEach(e => {
+                mediumLists.insertAdjacentHTML('afterbegin', `<li><a class="dropdown-item" onclick="addValue('utm_medium', '${e}')">${e}</a></li>`)
+            })
+
+            basicData.utm_term.forEach(e => {
+                termLists.insertAdjacentHTML('afterbegin', `<li><a class="dropdown-item" onclick="addValue('utm_term', '${e}')">${e}</a></li>`)
+            })
+        }
+  
+        initOptions()
+
+        function percentEncode(string) {
+            let updUrl = string.replace(/[=]/g, "%3D")
+            .replace("fbs.com", underDomen)
+            .replace(/[/]/g, "%2F")
+            .replace(/[?]/g, "%3F")
+            .replace(/[&]/g, "%26")
+            .replace(/[:]/g, "%3A")
+            .replace(/(%3D)/, "=") 
+            .replace(/(%26)/, "&") 
+            return updUrl;
+        }
+
+        function copyLink() {
+
+            linkCopy.style.background = '#eaeaea'
+
+            navigator.clipboard.writeText(inpResult.value)
+            .then(() => {
+                // Done 
+            })
+            .catch(err => {
+                console.log('Something went wrong', err);
+            });
+
+            setTimeout(() => {
+                linkCopy.style.background = "#f8f9fa"
+            }, 600)
+            
+        }
+    </script>
+</body>
+
+</html>

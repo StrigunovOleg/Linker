@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web link builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+
+        .input-group-text {
+            width: 140px;
+        }
+
+        .form-control:focus {
+            border-color: #FF0000;
+            /* box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6); */
+            box-shadow: none;
+            }
+
+        input::placeholder {
+            color: #E5E5E5;
+        }
+
+        input:focus {
+            outline: none !important;
+        }
+
+        input:active {
+            outline: none !important;
+        }
+
+        .wrapper {
+            margin: 40px auto;
+            width: 80%;
+        }
+
+        .regular_size {
+            max-width: 340px;
+        }
+
+        .big_size {
+            max-width: 640px;
+        }
+
+        .dropdown-item:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- toggle system -->
+        <div style="margin-bottom: 40px;">
+            <input id="bloomreachSystem" type="radio" class="btn-check" name="options" id="bloomreachSystem" autocomplete="off">
+            <label class="btn btn-outline-primary" for="bloomreachSystem">Bloomreach</label>
+
+            <input id="emarsysStstem" type="radio" class="btn-check" name="options" id="emarsysStstem" autocomplete="off">
+            <label class="btn btn-outline-primary" for="emarsysStstem">Emarsys</label>
+        </div>
+
+        <!-- address -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">address</span>
+            <input oninput="addValue('address', this.value)" id="inpAddress" type="text" class="form-control" placeholder="добавить адрес после домена" aria-label="address" aria-describedby="basic-addon1">
+        </div>
+        <!-- ?utm_source=$ESP$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">utm_source</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="addValue('utm_source', bloomreachData.utm_source)">bloomreach</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_source', emarsysData.utm_source)">Emarsys</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_source', pushWooshData.utm_source)">PushWoosh</a></li>
+            </ul>
+            <input id="inpUtmSource" oninput="addValue('utm_source', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_medium=$типа трафика$ --> 
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">utm_medium</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" id="mediumLists"></ul>
+            <input id="inpUtmMedium" oninput="addValue('utm_medium', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_content=$язык$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">utm_content</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="addValue('utm_content', bloomreachData.utm_content)">Bloomreach</a></li>
+                <li><a class="dropdown-item" onclick="addValue('utm_content', emarsysData.utm_content)">Emarsys</a></li>
+            </ul>
+            <input id="inpUtmContent" oninput="addValue('utm_content', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_campaign=$кампания$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">utm_campaign</span>
+            <input oninput="addValue('utm_campaign', this.value)" id="inpUtmCampaing" type="text" class="form-control" placeholder="добавить..." aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <!-- &utm_term=$часть письма$ -->
+        <div class="input-group mb-3 big_size">
+            <span class="input-group-text" id="basic-addon1">utm_term</span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" id="termLists">
+            </ul>
+            <input id="inpUtmTerm" oninput="addValue('utm_term', this.value)" type="text" class="form-control" placeholder="выбери из списка или впиши свою опцию" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <!-- result -->
+        <div class="input-group">
+            <span class="input-group-text">COPY</span>
+            <textarea id="inpResult" placeholder="https://$домен$/" class="form-control" aria-label="https://$домен$/"></textarea>
+        </div>
+
+    
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+    </script>
+
+    <script>
+
+        const esp = {
+            domen: "$домен$/",
+            utm_source: "?utm_source=",
+            utm_content: "&utm_content=",
+            utm_medium: "&utm_medium=",
+            utm_campaign: "&utm_campaign=",
+            utm_term: "&utm_term="
+        }
+
+        const basicData = {
+            utm_medium: ['Email','Push','Sms'],
+            utm_term: ['Header','Body','Footer']
+        }
+
+        const bloomreachData = {
+            domen: "{{ customer.domain_cabinet }}/",
+            utm_source: "bloomreach",
+            utm_content: "{{ customer.language }}"
+        }
+
+        const emarsysData = {
+            domen: "$domain_cabinet$/",
+            utm_source: "Emarsys",
+            utm_content: "$Lang -- Cabinet id$"
+        }
+
+        const pushWooshData = {
+            utm_source: "PushWoosh",
+        }
+
+        let domen = esp.domen
+        let address = ""
+        let utm_source = ""
+        let utm_medium = ""
+        let utm_content = ""
+        let utm_campaign = ""
+        let utm_term = ""
+
+
+        bloomreachSystem.addEventListener('click', (e)=> {selectSystem(e.target)})
+        emarsysStstem.addEventListener('click', (e)=> {selectSystem(e.target)})
+
+        function addValue(type, value) {
+            switch(type) {
+                case 'address':
+                    address = value.length == 0 ? "" : value + '/'
+                    break;
+                case 'utm_source':
+                    utm_source = value.length == 0 ? "" : esp.utm_source+value
+                    inpUtmSource.value = value
+                    break;
+                case 'utm_medium':
+                    utm_medium = value.length == 0 ? "" : esp.utm_medium+value
+                    inpUtmMedium.value = value
+                    break;   
+                case 'utm_content':
+                    utm_content = value.length == 0 ? "" : esp.utm_content+value
+                    inpUtmContent.value = value
+                    break;  
+                case 'utm_campaign':
+                    utm_campaign = value.length == 0 ? "" : esp.utm_campaign+value
+                    break;   
+                case 'utm_term':
+                    utm_term = value.length == 0 ? "" : esp.utm_term+value
+                    inpUtmTerm.value = value
+                    break;  
+                default:
+                    // code block
+                }
+            
+            renderLink()
+        }
+
+        function selectSystem(target) {
+            switch(target.id) {
+                case 'bloomreachSystem':
+                    // domen
+                    domen = bloomreachData.domen
+                    // utm_source
+                    inpUtmSource.value = bloomreachData.utm_source
+                    utm_source = esp.utm_source+inpUtmSource.value
+                    // utm_content
+                    inpUtmContent.value = bloomreachData.utm_content
+                    utm_content = esp.utm_content+inpUtmContent.value
+                    break;
+                case 'emarsysStstem':
+                    // domen
+                    domen = emarsysData.domen
+                    // utm_source
+                    inpUtmSource.value = emarsysData.utm_source
+                    utm_source = esp.utm_source+inpUtmSource.value
+                    // utm_content
+                    inpUtmContent.value = emarsysData.utm_content
+                    utm_content = esp.utm_content+inpUtmContent.value
+                    break;
+                default:
+                    // code block
+                }
+
+            // utm_medium
+            inpUtmMedium.value = basicData.utm_medium[0]
+            utm_medium = esp.utm_medium+inpUtmMedium.value
+            // utm_term
+            inpUtmTerm.value = basicData.utm_term[0]
+            utm_term = esp.utm_term+inpUtmTerm.value
+            
+            renderLink()
+        }
+
+        function renderLink() {
+            inpResult.value = `https://${domen}${address}${utm_source}${utm_medium}${utm_content}${utm_campaign}${utm_term}&no_eu_overlay=1`
+        }
+
+        function initOptions() {
+            basicData.utm_medium.forEach(e => {
+                mediumLists.insertAdjacentHTML('afterbegin', `<li><a class="dropdown-item" onclick="addValue('utm_medium', '${e}')">${e}</a></li>`)
+            })
+
+            basicData.utm_term.forEach(e => {
+                termLists.insertAdjacentHTML('afterbegin', `<li><a class="dropdown-item" onclick="addValue('utm_term', '${e}')">${e}</a></li>`)
+            })
+        }
+
+  
+        initOptions()
+    </script>
+</body>
+
+</html>
